@@ -82,7 +82,8 @@ final RegExp _queryParamPattern = RegExp(
 
 /// `"password": "abc"` / `password: abc` in JSON or map/toString output.
 ///
-/// The leading `(?<![A-Za-z0-9])` requires the name to start a word. Without
+/// The leading `(?:^|[
+,{\[;]\s*)` requires the name to start a word. Without
 /// it, any word *ending* in a sensitive name scrubbed the token after it, which
 /// silently mangled ordinary log lines — `Directory: /roms`, `Summary: 12`,
 /// `Activity: com.foo.Bar`, `monkey: banana`, `bypass: true`. The `y` entry made
@@ -103,7 +104,8 @@ final RegExp _queryParamPattern = RegExp(
 /// diagnostic text. No credential encoding this file redacts (base64,
 /// base64url, hex, a JWT) contains a `;`. Issue #197.
 final RegExp _jsonFieldPattern = RegExp(
-  '(?<![A-Za-z0-9])'
+  '(?:^|[
+,{\[;]\s*)'
   '(["\']?(?:${_sensitiveFieldNames.join('|')})["\']?\\s*[:=]\\s*)'
   '(["\'][^"\']*["\']|[^,;\\s}\\]&<>"\']+)',
   caseSensitive: false,
